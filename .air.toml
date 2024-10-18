@@ -4,7 +4,7 @@ tmp_dir = "tmp"
 
 [build]
   args_bin = []
-  cmd = "go build -o ./bin/server ./cmd/main.go"
+  cmd = "go build -o ./bin/server ./cmd/workers/score-worker/main.go"
   # Binary file yields from `cmd`.
   bin = "./bin/server"
   delay = 0

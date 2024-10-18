@@ -1,17 +1,18 @@
 package migrations
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 
 	"github.com/difmaj/ms-credit-score/internal/pkg/config"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
 const seedsDir = "seeds/"
 
 // RunSeeds executes the seeds.
-func RunSeeds(db *gorm.DB) error {
+func RunSeeds(ctx context.Context, db *sqlx.DB) error {
 	enviromentDir := seedsDir + config.Env.Environment
 	if _, err := os.Stat(enviromentDir); os.IsNotExist(err) {
 		return nil
@@ -27,7 +28,7 @@ func RunSeeds(db *gorm.DB) error {
 				return err
 			}
 
-			if err := db.Exec(string(script)).Error; err != nil {
+			if _, err := db.ExecContext(ctx, string(script)); err != nil {
 				return err
 			}
 		}

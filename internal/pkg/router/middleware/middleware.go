@@ -1,8 +1,5 @@
 package middleware
 
-// IMiddleware interface.
-type IMiddleware interface{}
-
 // IUsecase interface.
 type IUsecase interface{}
 
@@ -12,6 +9,6 @@ type Middleware struct {
 }
 
 // NewMiddleware creates a new instance of the Middleware struct.
-func NewMiddleware(uc IUsecase) IMiddleware {
+func NewMiddleware(uc IUsecase) *Middleware {
 	return &Middleware{uc}
 }

@@ -14,7 +14,7 @@ swag:
 
 # Use this command to run the application
 goapp:
-	docker-compose up --build ...
+	docker-compose up --build score-worker
 
 # Use this command to generate migration files
 generate-migration-files:

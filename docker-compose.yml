@@ -1,0 +1,45 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: "mysql"
+    ports:
+      - "${MYSQL_PORT}:${MYSQL_PORT}"
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+  
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+
+  score-worker:
+    build: 
+      context: ./
+      target: development
+      dockerfile: docker/score-worker.Dockerfile
+    container_name: "score-worker"
+    ports:
+      - "${PORT}:${PORT}"
+    env_file:
+      - ".env"
+    volumes:
+      - ./:/go/src/main
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+  
+volumes:
+  go-cache:
+  go-mod:

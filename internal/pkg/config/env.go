@@ -15,6 +15,19 @@ type Environment struct {
 
 	DatabaseMYSQLDNS    string `env:"DATABASE_MYSQL_DNS"`
 	DatabaseMYSQLSchema string `env:"DATABASE_MYSQL_SCHEMA"`
+
+	JWTGlobalKey      string `env:"JWT_GLOBAL_KEY,required"`
+	JWTAud            string `env:"JWT_AUD,required"`
+	JWTIss            string `env:"JWT_ISS,required"`
+	JWTRefreshDaysExp int    `env:"JWT_REFRESH_DAYS_EXP" envDefault:"2"`
+
+	RedisMaxIdle     int `env:"REDIS_MAX_IDLE" envDefault:"50"`
+	RedisMaxActive   int `env:"REDIS_MAX_ACTIVE" envDefault:"100"`
+	RedisIdleTimeout int `env:"REDIS_IDLE_TIMEOUT" envDefault:"300"`
+
+	RedisNetwork  string `env:"REDIS_NETWORK,required"`
+	RedisAddr     string `env:"REDIS_ADDR,required"`
+	RedisPassword string `env:"REDIS_PASSWORD,required"`
 }
 
 // Env is the environment variable.

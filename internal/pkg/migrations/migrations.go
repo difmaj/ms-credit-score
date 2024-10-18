@@ -6,7 +6,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"gorm.io/gorm"
+	"github.com/jmoiron/sqlx"
 )
 
 // Config represents the configuration for the migrations.
@@ -26,13 +26,8 @@ type Result struct {
 }
 
 // Run runs the migrations.
-func Run(orm *gorm.DB, config *Config) (*Result, error) {
-	db, err := orm.DB()
-	if err != nil {
-		return nil, err
-	}
-
-	driver, err := mysql.WithInstance(db, &mysql.Config{
+func Run(conn *sqlx.DB, config *Config) (*Result, error) {
+	driver, err := mysql.WithInstance(conn.DB, &mysql.Config{
 		MigrationsTable: "schema_migrations",
 	})
 	if err != nil {
