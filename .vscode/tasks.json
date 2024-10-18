@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Generate Mock",
+      "group": "build",
+      "type": "shell",
+      "promptOnClose": true,
+      "command": "make",
+      "args": [
+        "generate-mock",
+        "FILE=${file}" // Set the FILE variable to the currently opened file
+      ],
+      "problemMatcher": []
+    }
+  ]
+}
