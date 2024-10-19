@@ -1,12 +1,12 @@
 package migrations
 
 import (
+	"database/sql"
 	"fmt"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/jmoiron/sqlx"
 )
 
 // Config represents the configuration for the migrations.
@@ -26,8 +26,8 @@ type Result struct {
 }
 
 // Run runs the migrations.
-func Run(conn *sqlx.DB, config *Config) (*Result, error) {
-	driver, err := mysql.WithInstance(conn.DB, &mysql.Config{
+func Run(conn *sql.DB, config *Config) (*Result, error) {
+	driver, err := mysql.WithInstance(conn, &mysql.Config{
 		MigrationsTable: "schema_migrations",
 	})
 	if err != nil {

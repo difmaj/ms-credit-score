@@ -1,7 +1,13 @@
 package middleware
 
+import (
+	"github.com/difmaj/ms-credit-score/internal/domain"
+)
+
 // IUsecase interface.
-type IUsecase interface{}
+type IUsecase interface {
+	ClaimsJWT(token string) (*domain.Claims, error)
+}
 
 // Middleware struct.
 type Middleware struct {

@@ -6,15 +6,15 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/difmaj/sword-health-backend-challenge/internal/pkg/dtos"
-	"github.com/difmaj/sword-health-backend-challenge/internal/pkg/router/middleware"
+	"github.com/difmaj/ms-credit-score/internal/dto"
+	"github.com/difmaj/ms-credit-score/internal/pkg/router/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
 )
 
 type ErrorSuite struct {
 	suite.Suite
-	middleware middleware.IMiddleware
+	middleware *middleware.Middleware
 }
 
 func TestErrorSuite(t *testing.T) {
@@ -52,7 +52,7 @@ func (s *ErrorSuite) TestErrorHandler() {
 		ctx, _ := gin.CreateTestContext(recorder)
 
 		// Add an API error to the context
-		apiErr := &dtos.APIError{
+		apiErr := &dto.APIError{
 			Status:  http.StatusBadRequest,
 			Message: "Bad request error",
 		}
@@ -83,7 +83,7 @@ func (s *ErrorSuite) TestErrorHandler() {
 		ctx, _ := gin.CreateTestContext(recorder)
 
 		// Add multiple errors to the context
-		apiErr := &dtos.APIError{
+		apiErr := &dto.APIError{
 			Status:  http.StatusBadRequest,
 			Message: "Bad request error",
 		}

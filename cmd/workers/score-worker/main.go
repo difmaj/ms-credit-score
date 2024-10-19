@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"net"
 	"net/http"
@@ -20,7 +21,6 @@ import (
 	"github.com/difmaj/ms-credit-score/internal/pkg/router/middleware"
 	"github.com/difmaj/ms-credit-score/internal/repository"
 	"github.com/difmaj/ms-credit-score/internal/usecase"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	// mysql driver
@@ -51,7 +51,7 @@ func main() {
 		}
 	}
 
-	db, err := sqlx.Open("mysql", config.Env.DatabaseMYSQLDNS)
+	db, err := sql.Open("mysql", config.Env.DatabaseMYSQLDNS)
 	if err != nil {
 		logger.Logger.Fatal("sqlx.Open", zap.Error(err))
 	}

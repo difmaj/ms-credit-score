@@ -2,17 +2,17 @@ package migrations
 
 import (
 	"context"
+	"database/sql"
 	"os"
 	"path/filepath"
 
 	"github.com/difmaj/ms-credit-score/internal/pkg/config"
-	"github.com/jmoiron/sqlx"
 )
 
 const seedsDir = "seeds/"
 
 // RunSeeds executes the seeds.
-func RunSeeds(ctx context.Context, db *sqlx.DB) error {
+func RunSeeds(ctx context.Context, db *sql.DB) error {
 	enviromentDir := seedsDir + config.Env.Environment
 	if _, err := os.Stat(enviromentDir); os.IsNotExist(err) {
 		return nil

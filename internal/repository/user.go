@@ -12,8 +12,9 @@ func (repo *Repository) GetUserByEmail(ctx context.Context, email string) (*doma
 	user := domain.User{
 		Base: &domain.Base{},
 	}
-	if err := repo.db.QueryRowContext(ctx, "SELECT BIN_TO_UUID(id), email, password_hash, role_id FROM users WHERE email = ?", email).Scan(
+	if err := repo.db.QueryRowContext(ctx, "SELECT BIN_TO_UUID(id), email, name, password_hash, role_id FROM users WHERE email = ? LIMIT 1", email).Scan(
 		&user.ID,
+		&user.Name,
 		&user.Email,
 		&user.PasswordHash,
 		&user.RoleID,
