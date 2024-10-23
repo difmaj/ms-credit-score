@@ -3,23 +3,18 @@ package main
 import (
 	"context"
 	"database/sql"
-	"errors"
-	"net"
-	"net/http"
 	"os/signal"
 	"runtime/debug"
 	"strings"
 	"syscall"
-	"time"
 
-	handler "github.com/difmaj/ms-credit-score/internal/handler/worker"
 	"github.com/difmaj/ms-credit-score/internal/pkg/config"
 	"github.com/difmaj/ms-credit-score/internal/pkg/logger"
 	"github.com/difmaj/ms-credit-score/internal/pkg/migrations"
 	"github.com/difmaj/ms-credit-score/internal/pkg/redis"
-	"github.com/difmaj/ms-credit-score/internal/pkg/router"
 	"github.com/difmaj/ms-credit-score/internal/pkg/router/middleware"
 	"github.com/difmaj/ms-credit-score/internal/repository"
+	"github.com/difmaj/ms-credit-score/internal/subscriber"
 	"github.com/difmaj/ms-credit-score/internal/usecase"
 	"go.uber.org/zap"
 
@@ -90,35 +85,23 @@ func main() {
 
 	usecase := usecase.New(repo, redis)
 	middle := middleware.NewMiddleware(usecase)
-	router := router.NewRouter(middle.ErrorHandler())
-	handler.NewHandler(router, middle, usecase)
 
-	srv := &http.Server{
-		Addr:              net.JoinHostPort("0.0.0.0", config.Env.Port),
-		Handler:           router,
-		ReadTimeout:       5 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       30 * time.Second,
+	subscriber, err := subscriber.New()
+	if err != nil {
+		logger.Logger.Error("subscriber.New", zap.Error(err))
+		return
 	}
+
+	handler.NewHandler(subscriber, middle, usecase)
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	go func() {
-		logger.Logger.Info("Listening on ", zap.String("addr", srv.Addr))
+	go subscriber.Process()
 
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.Logger.Error("server.ListenAndServe", zap.Error(err))
-			stop()
-		}
-	}()
 	<-ctx.Done()
 
-	ctxShutdown, cancelShutdown := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelShutdown()
-
-	if err := srv.Shutdown(ctxShutdown); err != nil {
+	if err := subscriber.Close(); err != nil {
 		logger.Logger.Error("server.Shutdown", zap.Error(err))
 	}
 }

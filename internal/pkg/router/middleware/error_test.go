@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/difmaj/ms-credit-score/internal/dto"
+	"github.com/difmaj/ms-credit-score/internal/interfaces"
 	"github.com/difmaj/ms-credit-score/internal/pkg/router/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/suite"
@@ -14,7 +15,7 @@ import (
 
 type ErrorSuite struct {
 	suite.Suite
-	middleware *middleware.Middleware
+	middleware interfaces.IMiddleware
 }
 
 func TestErrorSuite(t *testing.T) {

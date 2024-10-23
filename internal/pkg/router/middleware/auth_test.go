@@ -9,8 +9,9 @@ import (
 	"time"
 
 	"github.com/difmaj/ms-credit-score/internal/domain"
+	"github.com/difmaj/ms-credit-score/internal/interfaces"
+	"github.com/difmaj/ms-credit-score/internal/interfaces/mock"
 	"github.com/difmaj/ms-credit-score/internal/pkg/router/middleware"
-	"github.com/difmaj/ms-credit-score/mocks"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/google/uuid"
@@ -20,8 +21,8 @@ import (
 type AuthSuite struct {
 	suite.Suite
 	ctrl       *gomock.Controller
-	middleware *middleware.Middleware
-	usecase    *mocks.MockIUsecase
+	usecase    *mock.MockIUsecase
+	middleware interfaces.IMiddleware
 }
 
 func TestAuthSuite(t *testing.T) {
@@ -30,7 +31,7 @@ func TestAuthSuite(t *testing.T) {
 
 func (s *AuthSuite) SetupTest() {
 	s.ctrl = gomock.NewController(s.T())
-	s.usecase = mocks.NewMockIUsecase(s.ctrl)
+	s.usecase = mock.NewMockIUsecase(s.ctrl)
 	s.middleware = middleware.NewMiddleware(s.usecase)
 }
 

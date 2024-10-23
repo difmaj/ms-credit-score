@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/difmaj/ms-credit-score/internal/interfaces"
 	"github.com/difmaj/ms-credit-score/internal/pkg/config"
 	"github.com/difmaj/ms-credit-score/internal/pkg/logger"
 	"github.com/difmaj/ms-credit-score/internal/pkg/validator"
@@ -20,22 +21,8 @@ type Router struct {
 	engine *gin.Engine
 }
 
-// IRouter interface.
-type IRouter interface {
-	Engine() *gin.Engine
-	Run(port int)
-	Use(middleware ...gin.HandlerFunc)
-	Group(path string, handlers ...gin.HandlerFunc) *gin.RouterGroup
-	GET(path string, handlers ...gin.HandlerFunc)
-	POST(path string, handlers ...gin.HandlerFunc)
-	PUT(path string, handlers ...gin.HandlerFunc)
-	PATCH(path string, handlers ...gin.HandlerFunc)
-	DELETE(path string, handlers ...gin.HandlerFunc)
-	ServeHTTP(w http.ResponseWriter, req *http.Request)
-}
-
 // NewRouter creates a new instance of the Router struct.
-func NewRouter(middlewares ...gin.HandlerFunc) IRouter {
+func NewRouter(middlewares ...gin.HandlerFunc) interfaces.IRouter {
 
 	engine := gin.New()
 	engine.RedirectFixedPath = false

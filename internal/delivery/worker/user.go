@@ -10,7 +10,7 @@ import (
 
 // Login handles the login request.
 func (h *Handler) Login(ctx *gin.Context) {
-	request := new(dto.LoginHTTPInput)
+	request := new(dto.LoginInput)
 	if err := ctx.ShouldBindJSON(request); err != nil {
 		ctx.Error(err)
 		return

@@ -1,11 +1,11 @@
 package domain
 
 import (
+	"errors"
 	"net/http"
 	"os"
 	"time"
 
-	"github.com/difmaj/ms-credit-score/internal/dto"
 	"github.com/google/uuid"
 )
 
@@ -34,10 +34,7 @@ func (cl *Claims) Valid() error {
 		cl.Issuer != os.Getenv("JWT_ISS") ||
 		userIDErr != nil ||
 		expired {
-		return &dto.APIError{
-			Status:  http.StatusUnauthorized,
-			Message: "invalid token",
-		}
+		return errors.New(http.StatusText(http.StatusUnauthorized))
 	}
 	return nil
 }

@@ -9,7 +9,7 @@ import (
 )
 
 // Login logs in a user.
-func (uc *Usecase) Login(ctx context.Context, input *dto.LoginHTTPInput) (*dto.LoginHTTPOutput, error) {
+func (uc *Usecase) Login(ctx context.Context, input *dto.LoginInput) (*dto.LoginOutput, error) {
 	user, err := uc.repo.GetUserByEmail(ctx, input.Email)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (uc *Usecase) Login(ctx context.Context, input *dto.LoginHTTPInput) (*dto.L
 		return nil, err
 	}
 
-	return &dto.LoginHTTPOutput{
+	return &dto.LoginOutput{
 		ID:           user.ID,
 		RefreshToken: claims.Ref,
 		AccessToken:  claims.Token,
